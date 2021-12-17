@@ -197,3 +197,5 @@ if __name__ == '__main__':
 
 ![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/ready.png)
 <br>Джерело: https://habrastorage.org/r/w1560/getpro/habr/post_images/75a/fcc/135/75afcc1352ed237efaf0a2280c2df295.png
+
+Тепер відкрийте React-додаток у браузері та спробуйте проаналізувати за його допомогою будь-яку пропозицію. Якщо все зроблено правильно, після натискання на кнопку **Send** ви побачите під текстовим полем результати аналізу.
