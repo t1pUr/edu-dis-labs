@@ -7,5 +7,18 @@
 
 **Ось так вигрядає вікно цього застосунку**
 
-![microservices](https://github.com/t1pUr/software_engineering_template/blob/master/src/images/CNN_example.gif)
+![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/app.gif)
 <br>Джерело: https://habrastorage.org/getpro/habr/post_images/674/7e1/415/6747e14151585819867c880f52fa9d21.gif
+
+<br>З технічної точки зору програма складається з трьох мікросервісів, кожен з яких вирішує певний набір завдань:</br>
+
+- SA-Frontend – веб-сервер Nginx, який обслуговує статичні файли React.
+- SA-WebApp — веб-програма, написана на Java, яка обробляє запити від фронтенду.
+- SA-Logic — програма Python, яка виконує аналіз тональності тексту.
+
+Мікросервіси існують не в ізоляції. Вони реалізують ідею «поділу обов'язків», але їм, у своїй, необхідно взаємодіяти одне з одним.
+
+**Наглядний приклад того як це все працює**
+
+![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/app_work.gif)
+<br>Джерело: https://habrastorage.org/getpro/habr/post_images/94b/f93/0c0/94bf930c03220c1eec6957a0f7308046.gif
