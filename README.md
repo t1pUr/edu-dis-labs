@@ -1,62 +1,22 @@
 # Мікросервіси для sentiment analysis
 
-## Як використовувати
+**Виконалв:** 
 
-В цьому репозиторії знаходиться шаблон для виконання лабораторних робіт.
+*студент 3-го курсу, групи ІО-91* 
 
-Для виконання лабораторних робіт необхідно зробити ```fork``` цього репозіторію, склонувати вже власний репозіторій та розміщувати документацію у відповідних діректоріях ```./docs```.
-
-В цьому файлі необхідно вказати назву проекту. Коротку загальну характеристику
-проекту, контактні дані виконавців.
+**Герейханов Тимур tg: @t1pur**
 
 
-Шаблон публікування підготовлено з використанням [VuePress](https://vuepress.vuejs.org/), та стартера 
-[FriendlyUser/vuepress-theme-cool-starter](https://github.com/FriendlyUser/vuepress-theme-cool-starter).
+**Керівник**
 
-Щоб опублікувати проект у Github Pages, налаштовуємо Github Pages (гілка ```gh-pages```), змінюємо файл ```./publish.sh```
+*доцент кафедри ОТ ФІОТ, к.т.н., доцент*<span padding-right:5em></span> **Андрій БОЛДАК** 
 
-```sh {24}
+[НТУУ "КИЇВСЬКИЙ ПОЛІТЕХНІЧНИЙ ІНСТИТУТ імені ІГОРЯ СІКОРСЬКОГО](https://kpi.ua/)
 
-#!/usr/bin/env sh
+[Факультет інформатики та обчислювальної техніки](https://fiot.kpi.ua/)
 
-# abort on errors
-set -e
+[Кафедра обчислювальної техніки](https://comsys.kpi.ua/)
 
-# build
-npm run docs:build
+Київ
 
-# navigate into the build output directory
-cd docs/.vuepress/dist
 
-# if you are deploying to a custom domain
-# echo 'www.example.com' > CNAME
-
-git init
-git add -A
-git commit -m 'deploy'
-
-# if you are deploying to https://<USERNAME>.github.io
-# git push -f git@github.com:boldak/<USERNAME>.github.io.git master
-
-# if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f https://github.com/<USERNAME>/dis-edu.git master:gh-pages
-
-cd -
-
-```
-
-Потім запускаємо
-
-```bash
-    npm run publish
-```
-
-Для відлагодження документації в локальному режимі запускаємо
-
-```bash
-    npm run docs:dev
-```
-
-Доступ до локально опублікованої версії документації [http://localhost:3030](http://localhost:3030)
-
-***Happy learning! Happy coding!*** 
