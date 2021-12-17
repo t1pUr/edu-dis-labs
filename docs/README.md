@@ -152,3 +152,48 @@ java -jar sentiment-analysis-web-0.0.1-SNAPSHOT.jar --sa.logic.api.url=http://lo
 
 ![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/step2.png)
 <br>Джерело: https://habrastorage.org/r/w1560/getpro/habr/post_images/30d/445/815/30d44581533865907366e867c029124e.png
+
+Тепер залишилося найголовніше, запустити програму на Python.
+
+## Налаштування програми Python
+Для того, щоб запустити програму Python, у вас повинні бути встановлені Python 3 і Pip, і потрібно, щоб були правильно налаштовані відповідні змінні середовища.
+
+Cпочатку треба перейти до папки проекту sa-logic/saта та виконати такі команди:
+```
+python -m pip install -r requirements.txt
+python -m textblob.download_corpora
+```
+Запускаємо програму
+```
+python sentiment_analysis.py
+```
+Тепер програма запущена та очікує на запит за адресою localhost:5000/
+
+## Розбираємо код на Python
+```python
+from textblob import TextBlob
+from flask import Flask, request, jsonify
+app = Flask(__name__)                                   #1
+@app.route("/analyse/sentiment", methods=['POST'])      #2
+def analyse_sentiment():
+    sentence = request.get_json()['sentence']           #3
+    polarity = TextBlob(sentence).sentences[0].polarity #4
+    return jsonify(                                     #5
+        sentence=sentence,
+        polarity=polarity
+    )
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)                #6
+```
+
+1. Ініціалізація об'єкту Flask.
+2. Встановлення адреси для виконання POST-запитів.
+3. Вилучення властивості sentenceз тіла запиту.
+4. Ініціалізація анонімного об'єкта TextBlobі отримання значення polarityдля першого запиту пропозиції, що надійшло в тілі (у нашому випадку це — єдина пропозиція, що передається на аналіз).
+5. Повернення відповіді, в тілі якої міститься текст пропозиції та обчислений для нього показник polarity.
+6. Запуск Flask-програми, яка буде доступна за адресою 0.0.0.0:5000(звернутися до неї можна і використовуючи конструкцію виду localhost:5000).
+
+Тепер мікросервіси, з яких складається програма, запущені. Вони налаштовані на взаємодію одне з одним. Ось як виглядає схема програми на фінальному етапі роботи.
+
+![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/ready.png)
+<br>Джерело: https://habrastorage.org/r/w1560/getpro/habr/post_images/75a/fcc/135/75afcc1352ed237efaf0a2280c2df295.png
