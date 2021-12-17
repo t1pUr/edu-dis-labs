@@ -93,8 +93,62 @@ const polarityComponent = this.state.polarity !== undefined ?
     null;
 ```
 
-Код, наче, виглядає працездатним. Але що тут не так? Якщо ви припустите, що за тією адресою, за якою програма намагається надіслати POST-запит, немає поки нічого, що може цей запит прийняти та обробити, то ви будете абсолютно праві. А саме, для обробки запитів, що надходять за адресою http://localhost:8080/sentiment, нам потрібно запустити веб-додаток, що базується на Spring. Зараз будемо з цим розбиратися
+Код, наче, виглядає працездатним. Але що тут не так? Якщо ви припустите, що за тією адресою, за якою програма намагається надіслати POST-запит, немає поки нічого, що може цей запит прийняти та обробити, то ви будете абсолютно праві. А саме, для обробки запитів, що надходять за адресою http://localhost:8080/sentiment, нам потрібно запустити веб-додаток, що базується на Spring. Зараз будемо з цим розбиратися.
 
 ![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/step1.png)
 <br>Джерело: https://habrastorage.org/r/w1560/getpro/habr/post_images/848/f16/5a3/848f165a308f9ae73ffd3f8186b23aee.png
 
+## Налаштування веб-застосунку на Spring
+Для того щоб розгорнути Spring-додаток, вам знадобиться JDK8 та Maven та правильно налаштовані змінні середовища. Після того, як ви це встановите, ви можете продовжувати роботу над нашим проектом. Перейдіть за допомогою терміналу в папку sa-webapp і введіть наступну команду:
+> mvn install
+
+Після виконання цієї команди у папці sa-webapp буде створено директорію target. Тут буде знаходитись Java-додаток, упакований у jar-файл, представлений файлом sentiment-analysis-web-0.0.1-SNAPSHOT.jar. Для запуску Java застосунку перейдіть до папки target і запустіть програму наступною командою:
+> java -jar sentiment-analysis-web-0.0.1-SNAPSHOT.jar
+
+У ході виконання цієї команди трапиться помилка. Для того щоб приступити до її виправлення, ми можемо проаналізувати відомості про виключення даних трасування стека:
+```
+Error creating bean with name 'sentimentController': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'sa.logic.api.url' in value "${sa.logic.api.url}"
+```
+Для нас тут найважливіше – згадка про неможливість з'ясування значення sa.logic.api.url. Проаналізуємо код, де відбувається помилка.
+
+## Аналіз коду Java-програми
+Ось фрагмент коду, де відбувається помилка.
+```java
+@CrossOrigin(origins = "*")
+@RestController
+public class SentimentController {
+    @Value("${sa.logic.api.url}")    // #1
+    private String saLogicApiUrl;
+    @PostMapping("/sentiment")
+    public SentimentDto sentimentAnalysis(
+        @RequestBody SentenceDto sentenceDto) 
+    {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.postForEntity(
+                saLogicApiUrl + "/analyse/sentiment",    // #2
+                sentenceDto, SentimentDto.class)
+                .getBody();
+    }
+}
+```
+
+1. У S entimentControllerє поле saLogicApiUrl. Його значення задається властивістю sa.logic.api.url.
+2. Рядок saLogicApiUrlконкатенується зі значенням /analyse/sentiment. Разом вони формують адресу виконання звернення до мікросервісу, що виконує аналіз тексту.
+
+У Spring стандартним джерелом значень властивостей є файл application.properties, який можна знайти за адресою sa-webapp/src/main/resources. Але його використання - це не єдиний спосіб завдання значень властивостей. Зробити це можна і за допомогою команди наступного виду:
+```
+java -jar sentiment-analysis-web-0.0.1-SNAPSHOT.jar --sa.logic.api.url=WHAT.IS.THE.SA.LOGIC.API.URL
+```
+
+Значення цієї властивості має вказувати на адресу нашої програми Python.
+
+Налаштовуючи його, ми повідомляємо веб-програмі Spring про те, куди йому потрібно звертатися для виконання запитів на аналіз тексту.
+
+Для того, щоб не ускладнювати собі життя, вирішимо, що Python-додаток буде доступний за адресою localhost:5000і будемо намагатися про це не забути. В результаті команда для запуску Spring-програми буде виглядати так:
+
+```
+java -jar sentiment-analysis-web-0.0.1-SNAPSHOT.jar --sa.logic.api.url=http://localhost:5000
+```
+
+![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/step2.png)
+<br>Джерело: https://habrastorage.org/r/w1560/getpro/habr/post_images/30d/445/815/30d44581533865907366e867c029124e.png
