@@ -55,3 +55,46 @@
 
 Тепер відкрийте браузер і перейдіть на адресу localhost:80. Ви побачите сторінку програми React.</br>
 ![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/result1.png)
+
+## Аналіз коду фронтенд-застосунку
+<br>у файлу App.js, можна побачити, що натискання на кнопку Send викликає метод analyzeSentence(). Код цього методу наведено нижче. При цьому зверніть увагу на те, що до кожного рядка, до якого є коментар виду №, є пояснення, наведене нижче коду. Так само ми розбиратимемо й інші фрагменти коду.</br>
+
+```javascript
+analyzeSentence() {
+    fetch('http://localhost:8080/sentiment', {  // #1
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+                       sentence: this.textField.getValue()})// #2
+    })
+        .then(response => response.json())
+        .then(data => this.setState(data));  // #3
+}
+```
+
+<br>1. URL, яким виконується POST-запрос. Мається на увазі, що за цією адресою знаходиться програма, яка чекає на подібні запити.
+
+2.Тіло запиту, що надсилається додатком. Ось приклад тіла запиту:</br>
+
+```javascript
+{
+    sentence: "Hello world!"
+}
+```
+
+3.При отриманні відповіді запит здійснюється оновлення стану компонента. Це спричиняє повторний рендеринг компонента. Якщо ми отримуємо дані (тобто JSON-об'єкт, що містить введені дані та обчислену оцінку тексту), ми виведемо компонент Polarity, оскільки будуть дотримані відповідні умови. Ось як ми описуємо компонент:
+
+```javascript
+const polarityComponent = this.state.polarity !== undefined ?
+    <Polarity sentence={this.state.sentence} 
+              polarity={this.state.polarity}/> :
+    null;
+```
+
+Код, наче, виглядає працездатним. Але що тут не так? Якщо ви припустите, що за тією адресою, за якою програма намагається надіслати POST-запит, немає поки нічого, що може цей запит прийняти та обробити, то ви будете абсолютно праві. А саме, для обробки запитів, що надходять за адресою http://localhost:8080/sentiment, нам потрібно запустити веб-додаток, що базується на Spring. Зараз будемо з цим розбиратися
+
+![microservices](https://github.com/t1pUr/edu-dis-labs/blob/master/src/images/step1.png)
+<br>Джерело: https://habrastorage.org/r/w1560/getpro/habr/post_images/848/f16/5a3/848f165a308f9ae73ffd3f8186b23aee.png
+
